@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+		
+	
+	
+	
+	<bean id="drink" class="com.thoughtworks.printReceiptModule.entity.GoodsCategory">
+		<constructor-arg name="category" value="食品"></constructor-arg>
+		<constructor-arg name="subCategory" value="饮料"></constructor-arg>
+	</bean>
+	<bean id="food" class="com.thoughtworks.printReceiptModule.entity.GoodsCategory">
+		<constructor-arg name="category" value="食品"></constructor-arg>
+		<constructor-arg name="subCategory" value="主食"></constructor-arg>
+	</bean>
+	<bean id="dailyNecessities" class="com.thoughtworks.printReceiptModule.entity.GoodsCategory">
+		<constructor-arg name="category" value="用品"></constructor-arg>
+		<constructor-arg name="subCategory" value="生活用品"></constructor-arg>
+	</bean>
+	<bean id="studyNecessities" class="com.thoughtworks.printReceiptModule.entity.GoodsCategory">
+		<constructor-arg name="category" value="用品"></constructor-arg>
+		<constructor-arg name="subCategory" value="学习用品"></constructor-arg>
+	</bean>
+	
+	<bean id="bottleUnit" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">    
+        <property name="staticField" value="com.thoughtworks.printReceiptModule.entity.Unit.BOTTLE" />    
+    </bean>
+    <bean id="bookUnit" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">    
+        <property name="staticField" value="com.thoughtworks.printReceiptModule.entity.Unit.BOOK" />    
+    </bean>
+    <bean id="oneUnit" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">    
+        <property name="staticField" value="com.thoughtworks.printReceiptModule.entity.Unit.ONE" />    
+    </bean>
+    
+	<bean id="cale" class="com.thoughtworks.printReceiptModule.entity.Goods">
+		<constructor-arg name="name" value="可口可乐"></constructor-arg>
+		<constructor-arg name="barcode" value="ITEM000000"></constructor-arg>
+		<constructor-arg name="unit" ref="bottleUnit"></constructor-arg>
+		<constructor-arg name="goodsCategory" ref="drink"></constructor-arg>
+		<constructor-arg name="price" value="3.00"></constructor-arg>
+	</bean>
+	
+	<bean id="book" class="com.thoughtworks.printReceiptModule.entity.Goods">
+		<constructor-arg name="name" value="哈利波特"></constructor-arg>
+		<constructor-arg name="barcode" value="ITEM000001"></constructor-arg>
+		<constructor-arg name="unit" ref="bookUnit"></constructor-arg>
+		<constructor-arg name="goodsCategory" ref="studyNecessities"></constructor-arg>
+		<constructor-arg name="price" value="13.00"></constructor-arg>
+	</bean>
+	
+	<bean id="bread" class="com.thoughtworks.printReceiptModule.entity.Goods">
+		<constructor-arg name="name" value="面包"></constructor-arg>
+		<constructor-arg name="barcode" value="ITEM000002"></constructor-arg>
+		<constructor-arg name="unit" ref="oneUnit"></constructor-arg>
+		<constructor-arg name="goodsCategory" ref="food"></constructor-arg>
+		<constructor-arg name="price" value="4.00"></constructor-arg>
+	</bean>
+	
+	<bean id="bowl" class="com.thoughtworks.printReceiptModule.entity.Goods">
+		<constructor-arg name="name" value="碗"></constructor-arg>
+		<constructor-arg name="barcode" value="ITEM000003"></constructor-arg>
+		<constructor-arg name="unit" ref="oneUnit"></constructor-arg>
+		<constructor-arg name="goodsCategory" ref="dailyNecessities"></constructor-arg>
+		<constructor-arg name="price" value="6.00"></constructor-arg>
+	</bean>
+	
+	
+	<bean id="goodsAndCategoryManager" class="com.thoughtworks.printReceiptModule.goodsAndCategoryManager.goodsAndCategoryManagerImpl.GoodsAndCategoryManagerImpl">
+		<constructor-arg name="goodsCategories">
+			<map>
+				<entry key="饮料" value-ref="drink"></entry>
+				<entry key="主食" value-ref="food"></entry>
+				<entry key="生活用品" value-ref="dailyNecessities"></entry>
+				<entry key="学习用品" value-ref="studyNecessities"></entry>
+			</map>
+		</constructor-arg>
+		<constructor-arg name="allGoods">
+			<map>
+				<entry key="ITEM000000" value-ref="cale"></entry>
+				<entry key="ITEM000001" value-ref="book"></entry>
+				<entry key="ITEM000002" value-ref="bread"></entry>
+				<entry key="ITEM000003" value-ref="bowl"></entry>
+			</map>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="promotionInfomation" class="com.thoughtworks.printReceiptModule.entity.PromotionInfomation">
+		<constructor-arg name="promotionName" value="BUY_THREE_GET_ONE_FREE"></constructor-arg>
+		<constructor-arg name="promotionBarcodes">
+			<list>
+				<value>ITEM000000</value>
+				<value>ITEM000001</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	
+	<bean id="printReceiptModule" class="com.thoughtworks.printReceiptModule.PrintReceiptModule">
+		<constructor-arg name="promotionInfomation" ref="promotionInfomation"></constructor-arg>
+		<!-- 该处配置条形码输入方式，1为文件输入，2为控制台输入 -->
+		<constructor-arg name="inputMethod" value="1"></constructor-arg>
+		<!-- 该处配置条形码输出方式，1为控制台输出，2为文件输出 -->
+		<constructor-arg name="outputMethod" value="1"></constructor-arg>
+		<constructor-arg name="goodsAndCategoryManager" ref="goodsAndCategoryManager"></constructor-arg>
+	</bean>
+	
+	
+
+</beans>
